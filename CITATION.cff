@@ -1,0 +1,67 @@
+cff-version: 1.2.0
+message: "If you reference the Auracelle platform or its frameworks, please cite as below."
+type: software
+title: "Auracelle: Strategic Cognition & Governance Stress-Testing Suite"
+abstract: >
+  Auracelle is a multi-module governance stress-testing suite for defense, 
+  intelligence, international organizations, standards bodies, and policy 
+  research institutes. It comprises three simulation platforms — Charlie 
+  (AI governance policy), Orion (cyber escalation and resilience), and 
+  Lyra (assurance and standards verification) — each grounded in the 
+  proprietary E-AGPO-HT and E-AGSO-HT multi-stratum governance 
+  intelligence frameworks developed by Grace-Alice Evans.
+authors:
+  - family-names: Evans
+    given-names: Grace-Alice
+    affiliation: >
+      Auracelle AI Governance Labs (Founder & Director);
+      UC Berkeley Center for Long-Term Cybersecurity (Non-Resident Senior Fellow);
+      Bath Spa University (Doctoral Researcher)
+    email: EvansAGrace@gmail.com
+version: "Charlie v3 · Orion v4 · Lyra v3 · March 2026"
+date-released: "2026-03-01"
+license: CC-BY-NC-ND-4.0
+repository-code: "https://github.com/[username]/auracelle"
+url: "https://[username].github.io/auracelle/"
+keywords:
+  - AI governance
+  - wargaming
+  - governance stress-testing
+  - cyber resilience
+  - assurance governance
+  - E-AGPO-HT
+  - E-AGSO-HT
+  - frontier AI
+  - nuclear safeguards
+  - policy simulation
+  - strategic foresight
+  - red teaming
+references:
+  - type: thesis
+    title: >
+      Testing Public Policy Outcomes through War Gaming Methodologies 
+      for Strengthening AI Governance
+    authors:
+      - family-names: Evans
+        given-names: Grace-Alice
+    institution:
+      name: Bath Spa University
+    supervisor:
+      - family-names: Curry
+        given-names: John
+    year: 2024
+  - type: article
+    title: "Can AGPO Close the AI Governance Gap Faster Than Legislation?"
+    authors:
+      - family-names: Evans
+        given-names: Grace-Alice
+    journal: Wargaming Weekly
+    year: 2025
+    url: "https://wargamingweekly.substack.com/p/can-agpo-close-the-ai-governance-gap-faster-than-legislation"
+  - type: article
+    title: "Security and Privacy Risks in an Era of Hybrid Work"
+    authors:
+      - family-names: Evans
+        given-names: Grace-Alice
+    journal: UC Berkeley Center for Long-Term Cybersecurity
+    year: 2021
