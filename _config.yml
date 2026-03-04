@@ -1,0 +1,20 @@
+title: Auracelle
+tagline: Strategic Cognition & Governance Stress-Testing Suite
+description: >
+  Auracelle AI Governance Labs — multi-module governance stress-testing 
+  platform for defense, intelligence, international organizations, and 
+  policy research institutes. E-AGPO-HT · E-AGSO-HT · Charlie · Orion · Lyra.
+author: Grace-Alice Evans
+email: EvansAGrace@gmail.com
+url: "https://[username].github.io"
+baseurl: "/auracelle"
+
+# GitHub Pages serves index.html directly — Jekyll processing not required
+# This config provides SEO metadata only
+exclude:
+  - README.md
+  - CHANGELOG.md
+  - CITATION.cff
+  - LICENSE
+  - SECURITY.md
+  - .gitignore
