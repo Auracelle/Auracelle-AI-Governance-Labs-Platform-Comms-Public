@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auracelle · Strategic Cognition & Governance Stress-Testing Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:        #0b0e14;
+  --ink-2:      #1a2035;
+  --ink-3:      #2d3a55;
+  --mist:       #8a9bb5;
+  --mist-light: #c4cedd;
+  --offwhite:   #f2f0eb;
+  --paper:      #faf9f6;
+  --gold:       #c9a84c;
+  --gold-dim:   #8a6e30;
+  --gold-pale:  #f5edda;
+  --charlie:    #c0392b;
+  --charlie-d:  #7a1c13;
+  --charlie-p:  #fdf1f0;
+  --orion:      #005a9e;
+  --orion-d:    #003566;
+  --orion-p:    #eaf2fb;
+  --lyra:       #007a7a;
+  --lyra-d:     #004b4b;
+  --lyra-p:     #e0f4f4;
+  --border:     rgba(255,255,255,0.07);
+  --border-lt:  rgba(10,14,20,0.10);
+}
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--offwhite);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ─── NOISE GRAIN OVERLAY ─── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.6;
+}
+
+/* ─── GRID BACKGROUND ─── */
+body::after {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.wrap { position:relative; z-index:1; max-width:1320px; margin:0 auto; padding:0 36px; }
+
+/* ─── TOP NAV ─── */
+.topnav {
+  position: sticky; top:0; z-index:200;
+  background: rgba(11,14,20,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+  max-width:1320px; margin:0 auto; padding:0 36px;
+  display:flex; align-items:center; gap:0; height:56px;
+}
+
+.nav-brand {
+  display:flex; align-items:center; gap:12px;
+  margin-right:auto;
+}
+
+.brand-mark {
+  width:32px; height:32px;
+  border:1.5px solid var(--gold);
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+
+.brand-mark::before {
+  content:'Λ';
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:600;
+  color:var(--gold);
+}
+
+.brand-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:600;
+  letter-spacing:.06em;
+  color: var(--offwhite);
+}
+
+.brand-name span {
+  color: var(--gold);
+}
+
+.nav-links {
+  display:flex; align-items:stretch; height:100%; gap:0;
+}
+
+.nav-link {
+  display:flex; align-items:center;
+  padding:0 18px;
+  font-size:.72rem; font-weight:500;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--mist);
+  text-decoration:none;
+  border-bottom:2px solid transparent;
+  transition:all .2s;
+  cursor:pointer;
+}
+
+.nav-link:hover { color:var(--offwhite); border-bottom-color:var(--gold); }
+
+.nav-cta {
+  margin-left:16px;
+  align-self:center;
+  padding:7px 18px;
+  font-size:.7rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+  border:1px solid var(--gold);
+  color:var(--gold);
+  background:transparent;
+  cursor:pointer;
+  transition:all .2s;
+}
+
+.nav-cta:hover { background:var(--gold); color:var(--ink); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height:100vh;
+  padding: 100px 0 80px;
+  position:relative;
+}
+
+.hero-inner {
+  display:grid;
+  grid-template-columns: 1fr 260px;
+  gap: 60px;
+  align-items: center;
+  min-height: calc(100vh - 180px);
+}
+
+.hero-content {
+  display:flex; flex-direction:column; justify-content:center;
+}
+
+.hero-eyebrow {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.6rem; font-weight:500;
+  letter-spacing:.25em; text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:24px;
+  display:flex; align-items:center; gap:12px;
+}
+
+.hero-eyebrow::before {
+  content:'';
+  display:block; width:40px; height:1px;
+  background:var(--gold);
+}
+
+.hero-headline {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3rem, 6vw, 5.5rem);
+  font-weight:300;
+  line-height:1.08;
+  letter-spacing:-.01em;
+  color:var(--offwhite);
+  margin-bottom:8px;
+  max-width:820px;
+}
+
+.hero-headline em {
+  font-style:italic;
+  color:var(--gold);
+}
+
+.hero-headline strong {
+  font-weight:600;
+}
+
+.hero-rule {
+  width:80px; height:1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin:28px 0;
+}
+
+.hero-tagline {
+  font-size:1.05rem; font-weight:300;
+  color:var(--mist-light);
+  line-height:1.75;
+  max-width:620px;
+  margin-bottom:48px;
+}
+
+.hero-tagline strong {
+  color:var(--offwhite); font-weight:500;
+}
+
+.hero-actions {
+  display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  margin-bottom:80px;
+}
+
+.btn-primary {
+  padding:13px 32px;
+  background:var(--gold);
+  color:var(--ink);
+  font-size:.75rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  border:none; cursor:pointer;
+  transition:all .2s;
+  text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+}
+
+.btn-primary:hover { background:#e0bc60; transform:translateY(-1px); }
+
+.btn-secondary {
+  padding:12px 28px;
+  background:transparent;
+  color:var(--offwhite);
+  font-size:.75rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+  border:1px solid rgba(255,255,255,0.2);
+  cursor:pointer; transition:all .2s;
+  text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+}
+
+.btn-secondary:hover { border-color:var(--offwhite); }
+
+.hero-credentials {
+  display:flex; align-items:center; gap:28px; flex-wrap:wrap;
+}
+
+.cred-item {
+  display:flex; align-items:center; gap:8px;
+}
+
+.cred-dot {
+  width:4px; height:4px;
+  border-radius:50%;
+  background:var(--gold);
+  flex-shrink:0;
+}
+
+.cred-text {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.58rem; letter-spacing:.1em;
+  color:var(--mist);
+}
+
+/* ─── HERO SIDEBAR STAT ─── */
+.hero-stat-block {
+  display:flex; flex-direction:column; gap:3px;
+  width:100%;
+  align-self: center;
+}
+
+.stat-item {
+  border:1px solid var(--border);
+  padding:14px 16px;
+  background:rgba(255,255,255,0.025);
+}
+
+.stat-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem; font-weight:600;
+  line-height:1;
+  color:var(--offwhite);
+}
+
+.stat-label {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.52rem; letter-spacing:.12em;
+  color:var(--mist);
+  margin-top:4px;
+}
+
+/* ─── SECTION HEADERS ─── */
+.section {
+  padding: 100px 0;
+  position:relative;
+}
+
+.section-eyebrow {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.58rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--gold);
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:16px;
+}
+
+.section-eyebrow::before {
+  content:'';
+  display:block; width:28px; height:1px; background:var(--gold);
+}
+
+.section-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem, 3.5vw, 3rem);
+  font-weight:300;
+  letter-spacing:-.01em;
+  line-height:1.15;
+  color:var(--offwhite);
+  margin-bottom:16px;
+}
+
+.section-desc {
+  font-size:.9rem; color:var(--mist-light);
+  max-width:540px; line-height:1.8;
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+
+/* ─── PLATFORM ARCHITECTURE BAND ─── */
+.architecture-band {
+  background:rgba(255,255,255,0.02);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:28px 0;
+}
+
+.arch-inner {
+  max-width:1320px; margin:0 auto; padding:0 36px;
+  display:flex; align-items:center; gap:0;
+}
+
+.arch-label {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.56rem; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--mist); white-space:nowrap;
+  padding-right:28px;
+  border-right:1px solid var(--border);
+  margin-right:28px;
+  flex-shrink:0;
+}
+
+.arch-formula {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.68rem; color:var(--mist-light);
+  line-height:1.8;
+}
+
+.arch-formula .hi { color:var(--gold); }
+.arch-formula .ch { color:var(--charlie); }
+.arch-formula .or { color:var(--orion); }
+.arch-formula .ly { color:var(--lyra); }
+
+/* ─── MODULE CARDS ─── */
+.modules-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;
+  margin-top:64px;
+}
+
+.module-card {
+  background:rgba(255,255,255,0.025);
+  border:1px solid var(--border);
+  padding:40px 36px 44px;
+  position:relative;
+  overflow:hidden;
+  transition:all .3s;
+  cursor:default;
+}
+
+.module-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0;
+  height:3px;
+  background:var(--mc);
+  transform:scaleX(0.3);
+  transform-origin:left;
+  transition:transform .4s ease;
+}
+
+.module-card:hover::before { transform:scaleX(1); }
+
+.module-card:hover {
+  background:rgba(255,255,255,0.04);
+}
+
+.module-id {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.55rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--mc);
+  display:flex; align-items:center; gap:8px;
+  margin-bottom:24px;
+}
+
+.module-id::before {
+  content:'';
+  display:block; width:20px; height:1px;
+  background:var(--mc);
+}
+
+.module-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem; font-weight:400;
+  color:var(--offwhite);
+  margin-bottom:4px;
+  letter-spacing:.02em;
+}
+
+.module-version {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.55rem; color:var(--mist);
+  margin-bottom:20px;
+  letter-spacing:.08em;
+}
+
+.module-rule {
+  width:40px; height:1px;
+  background:var(--mc); opacity:.5;
+  margin-bottom:20px;
+}
+
+.module-remit {
+  font-size:.85rem; color:var(--mist-light);
+  line-height:1.7; margin-bottom:24px;
+  font-weight:300;
+}
+
+.module-tags {
+  display:flex; flex-wrap:wrap; gap:6px;
+  margin-bottom:28px;
+}
+
+.mtag {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.52rem; letter-spacing:.07em;
+  padding:3px 9px;
+  border:1px solid rgba(201,168,76,0.4);
+  color:var(--gold);
+  background:rgba(201,168,76,0.07);
+}
+
+.module-metrics {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  margin-bottom:28px;
+}
+
+.mm-item {
+  background:rgba(11,14,20,0.6);
+  padding:10px 12px;
+}
+
+.mm-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem; font-weight:600;
+  line-height:1;
+  color:var(--offwhite);
+}
+
+.mm-label {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.49rem; letter-spacing:.1em;
+  color:var(--mist);
+  margin-top:3px;
+}
+
+.module-link {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--mc);
+  display:inline-flex; align-items:center; gap:8px;
+  text-decoration:none;
+  border-bottom:1px solid transparent;
+  transition:border-color .2s;
+  cursor:pointer;
+}
+
+.module-link:hover { border-bottom-color:var(--mc); }
+
+.module-link::after { content:'→'; }
+
+/* ─── DUAL-USE ARCHITECTURE ─── */
+.dual-section {
+  padding:100px 0;
+}
+
+.dual-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:2px;
+  margin-top:56px;
+}
+
+.dual-panel {
+  padding:48px 44px;
+  border:1px solid var(--border);
+  position:relative;
+}
+
+.dual-panel.public {
+  background:rgba(201,168,76,0.04);
+  border-color:rgba(201,168,76,0.2);
+}
+
+.dual-panel.private {
+  background:rgba(255,255,255,0.015);
+}
+
+.dual-header {
+  display:flex; align-items:flex-start; gap:16px;
+  margin-bottom:32px;
+}
+
+.dual-icon {
+  width:44px; height:44px; flex-shrink:0;
+  border:1px solid;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px;
+}
+
+.public .dual-icon { border-color:var(--gold); color:var(--gold); }
+.private .dual-icon { border-color:var(--mist); color:var(--mist); }
+
+.dual-label {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.55rem; letter-spacing:.2em; text-transform:uppercase;
+  margin-bottom:4px;
+}
+
+.public .dual-label { color:var(--gold); }
+.private .dual-label { color:var(--mist); }
+
+.dual-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.7rem; font-weight:400;
+  color:var(--offwhite);
+  letter-spacing:.02em;
+}
+
+.dual-desc {
+  font-size:.83rem; color:var(--mist-light);
+  line-height:1.75; margin-bottom:28px;
+  font-weight:300;
+}
+
+.dual-items {
+  list-style:none;
+  display:flex; flex-direction:column; gap:10px;
+}
+
+.dual-items li {
+  display:flex; align-items:flex-start; gap:10px;
+  font-size:.8rem; color:var(--mist-light); line-height:1.5;
+}
+
+.di-marker {
+  width:16px; height:16px; flex-shrink:0;
+  border:1px solid;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.5rem; font-weight:700;
+  margin-top:2px;
+}
+
+.public .di-marker { border-color:var(--gold); color:var(--gold); }
+.private .di-marker { border-color:var(--mist); color:var(--mist); }
+
+.dual-positioning-line {
+  margin-top:64px;
+  padding:32px 40px;
+  border:1px solid rgba(201,168,76,0.25);
+  background:rgba(201,168,76,0.03);
+  position:relative;
+}
+
+.dual-positioning-line::before {
+  content:'POSITIONING';
+  position:absolute; top:-9px; left:28px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.5rem; letter-spacing:.2em;
+  padding:0 8px;
+  background:var(--ink);
+  color:var(--gold);
+}
+
+.dpl-text {
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:1.2rem; font-weight:300;
+  color:var(--mist-light);
+  line-height:1.7;
+}
+
+.dpl-text strong {
+  color:var(--offwhite); font-style:normal; font-weight:600;
+}
+
+/* ─── GRANT OPPORTUNITY TABLE ─── */
+.grants-section { padding:100px 0; }
+
+.grant-table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:48px;
+}
+
+.grant-table thead tr {
+  border-bottom:1px solid rgba(201,168,76,0.3);
+}
+
+.grant-table thead th {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.56rem; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--gold);
+  text-align:left; padding:0 16px 14px;
+  font-weight:400;
+}
+
+.grant-table tbody tr {
+  border-bottom:1px solid var(--border);
+  transition:background .15s;
+}
+
+.grant-table tbody tr:hover { background:rgba(255,255,255,0.02); }
+
+.grant-table td {
+  padding:16px;
+  font-size:.8rem; color:var(--mist-light);
+  vertical-align:top;
+}
+
+.grant-table td:first-child {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.65rem; font-weight:500;
+  color:var(--offwhite);
+}
+
+.module-dot {
+  display:inline-block;
+  width:8px; height:8px; border-radius:50%;
+  margin-right:5px;
+}
+
+.dot-ch { background:var(--charlie); }
+.dot-or { background:var(--orion); }
+.dot-ly { background:var(--lyra); }
+
+.grant-badge {
+  display:inline-block;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.5rem; letter-spacing:.1em;
+  padding:2px 7px; border:1px solid;
+  margin-right:4px; margin-bottom:2px;
+}
+
+.gb-research { border-color:var(--gold); color:var(--gold); }
+.gb-consulting { border-color:var(--mist); color:var(--mist); }
+.gb-both { border-color:var(--offwhite); color:var(--offwhite); }
+
+/* ─── E-AGPO FRAMEWORK ─── */
+.framework-section { padding:100px 0; }
+
+.strata-visual {
+  margin-top:56px;
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+
+.stratum {
+  display:flex; align-items:stretch;
+  border-bottom:1px solid var(--border);
+}
+
+.stratum:last-child { border-bottom:none; }
+
+.stratum-id {
+  width:160px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:4px;
+  padding:24px 20px;
+  background:rgba(255,255,255,0.03);
+  border-right:1px solid var(--border);
+}
+
+.sid {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.56rem; letter-spacing:.2em;
+  color:var(--gold);
+}
+
+.snum {
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.4rem; font-weight:300;
+  color:var(--offwhite); line-height:1;
+}
+
+.stratum-content {
+  flex:1; padding:24px 28px;
+}
+
+.stratum-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem; font-weight:600;
+  color:var(--offwhite);
+  margin-bottom:4px;
+}
+
+.stratum-desc {
+  font-size:.78rem; color:var(--mist);
+  line-height:1.6;
+}
+
+.stratum-items {
+  display:flex; flex-wrap:wrap; gap:5px;
+  margin-top:12px;
+}
+
+.si {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.52rem; padding:3px 8px;
+  border:1px solid var(--border);
+  color:var(--mist-light);
+}
+
+/* ─── INSTITUTIONAL ENGAGEMENT ─── */
+.institutions-section {
+  padding:80px 0;
+  border-top:1px solid var(--border);
+}
+
+.inst-label {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.56rem; letter-spacing:.2em;
+  color:var(--mist); text-align:center;
+  margin-bottom:40px;
+}
+
+.inst-row {
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:1px;
+}
+
+.inst-item {
+  padding:14px 28px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.02);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--mist);
+  transition:all .2s;
+}
+
+.inst-item:hover { color:var(--offwhite); background:rgba(255,255,255,0.04); }
+
+/* ─── CONTACT / CTA ─── */
+.cta-section {
+  padding:120px 0 100px;
+  text-align:center;
+  position:relative;
+}
+
+.cta-section::before {
+  content:'';
+  position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:1px; height:80px;
+  background:linear-gradient(to bottom, transparent, var(--gold));
+}
+
+.cta-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.8rem,3vw,2.8rem);
+  font-weight:300; line-height:1.2;
+  color:var(--offwhite);
+  margin-bottom:20px;
+}
+
+.cta-sub {
+  font-size:.85rem; color:var(--mist);
+  max-width:440px; margin:0 auto 44px;
+  line-height:1.7;
+}
+
+.cta-actions {
+  display:flex; justify-content:center;
+  gap:16px; flex-wrap:wrap;
+  margin-bottom:60px;
+}
+
+.contact-channels {
+  display:flex; justify-content:center;
+  gap:24px; flex-wrap:wrap;
+}
+
+.contact-ch {
+  display:flex; align-items:center; gap:8px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.6rem; letter-spacing:.1em;
+  color:var(--mist);
+}
+
+.contact-ch .cc-label { color:var(--gold); }
+
+/* ─── FOOTER ─── */
+footer {
+  border-top:1px solid var(--border);
+  padding:32px 0;
+}
+
+.footer-inner {
+  max-width:1320px; margin:0 auto; padding:0 36px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+
+.footer-brand {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem; font-weight:600;
+  color:var(--mist);
+}
+
+.footer-brand span { color:var(--gold); }
+
+.footer-meta {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.52rem; letter-spacing:.1em;
+  color: rgba(138,155,181,0.5);
+  text-align:right; line-height:1.8;
+}
+
+.footer-ip {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.52rem; letter-spacing:.08em;
+  color:var(--gold-dim);
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity:0; }
+  to   { opacity:1; }
+}
+
+.hero-eyebrow { animation: fadeIn .8s ease .1s both; }
+.hero-headline { animation: fadeUp .9s ease .2s both; }
+.hero-rule     { animation: fadeIn .8s ease .5s both; }
+.hero-tagline  { animation: fadeUp .8s ease .4s both; }
+.hero-actions  { animation: fadeUp .8s ease .55s both; }
+.hero-credentials { animation: fadeUp .8s ease .65s both; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width:1100px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-stat-block { display:none; }
+  .modules-grid { grid-template-columns:1fr; }
+}
+
+@media (max-width:800px) {
+  .dual-grid { grid-template-columns:1fr; }
+  .wrap { padding:0 20px; }
+  .nav-links { display:none; }
+  .hero { padding:80px 0 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="brand-mark"></div>
+      <div class="brand-name">Aura<span>celle</span></div>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link" href="#modules">Modules</a>
+      <a class="nav-link" href="#architecture">Architecture</a>
+      <a class="nav-link" href="#framework">Framework</a>
+      <a class="nav-link" href="#engagement">Engagement</a>
+      <a class="nav-link" href="#contact">Contact</a>
+    </div>
+    <button class="nav-cta">Request Briefing</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+    <div class="hero-content">
+    <div class="hero-eyebrow">Auracelle AI Governance Labs &nbsp;·&nbsp; E-AGPO / E-AGSO-HT Suite</div>
+    <h1 class="hero-headline">
+      Strategic cognition<br>
+      for governance<br>
+      <em>under stress.</em>
+    </h1>
+    <div class="hero-rule"></div>
+    <p class="hero-tagline">
+      <strong>Auracelle</strong> is a strategic cognition and governance stress-testing suite that evaluates whether governance controls survive real decision conditions — <strong>adversarial behavior</strong>, cross-stakeholder incentives, and cascading dependencies.
+    </p>
+    <div class="hero-actions">
+      <a href="#modules" class="btn-primary">Explore the Suite</a>
+      <a href="#architecture" class="btn-secondary">Research Architecture</a>
+    </div>
+    <div class="hero-credentials">
+      <div class="cred-item">
+        <div class="cred-dot"></div>
+        <div class="cred-text">UC Berkeley CLTC Affiliated</div>
+      </div>
+      <div class="cred-item">
+        <div class="cred-dot"></div>
+        <div class="cred-text">20+ Years Technology Governance Experience</div>
+      </div>
+      <div class="cred-item">
+        <div class="cred-dot"></div>
+        <div class="cred-text">Defense · Intelligence · Critical Infrastructure</div>
+      </div>
+    </div>
+    </div><!-- end hero-content -->
+
+    <!-- Sidebar stats -->
+    <div class="hero-stat-block">
+      <div class="stat-item">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Simulation Modules</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Proprietary Frameworks</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">Multi</div>
+        <div class="stat-label">Strata Architecture</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">Live</div>
+        <div class="stat-label">Real-World Data APIs</div>
+      </div>
+    </div>
+    </div><!-- end hero-inner -->
+  </div>
+</section>
+
+<!-- ARCHITECTURE BAND -->
+<div class="architecture-band">
+  <div class="arch-inner">
+    <div class="arch-label">Platform Formula</div>
+    <div class="arch-formula">
+      Proprietary multi-stratum intelligence architecture &nbsp;·&nbsp; <span class="ch">E-AGPO-HT</span> [Charlie · Orion] &nbsp;·&nbsp; <span class="ly">E-AGSO-HT</span> [Lyra]<br>
+      Wargame mechanics: <span class="ch">Red Teaming</span> · <span class="hi">External Shock Injection</span> &nbsp;·&nbsp; Output: After Action Reports &nbsp;·&nbsp; Integrated live data APIs
+    </div>
+  </div>
+</div>
+
+<!-- MODULES -->
+<section id="modules" class="section">
+  <div class="wrap">
+    <div class="section-eyebrow">Platform Modules</div>
+    <h2 class="section-title">Three simulation environments.<br>One governance intelligence layer.</h2>
+    <p class="section-desc">Each module addresses a distinct domain of governance failure — together they form a coherent analytical suite for institutional stress-testing.</p>
+
+    <div class="modules-grid">
+
+      <!-- CHARLIE -->
+      <div class="module-card" style="--mc:var(--charlie)">
+        <div class="module-id">Module Alpha</div>
+        <div class="module-name">Auracelle Charlie</div>
+        <div class="module-version">v3 · Research Prototype · Streamlit + API</div>
+        <div class="module-rule"></div>
+        <p class="module-remit">
+          AI governance policy stress-testing. Interrogates institutional coordination, adoption dynamics, legitimacy thresholds, and evidence standards under adversarial and multi-stakeholder conditions.
+        </p>
+        <div class="module-tags">
+          <span class="mtag">Policy Wargaming</span>
+          <span class="mtag">Red Teaming</span>
+          <span class="mtag">External Shock Injection</span>
+          <span class="mtag">Multi-Actor</span>
+          <span class="mtag">Live Data APIs</span>
+        </div>
+        <div class="module-metrics">
+          <div class="mm-item">
+            <div class="mm-num">7+</div>
+            <div class="mm-label">Scenarios</div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-num">2</div>
+            <div class="mm-label">Wargame Mechanics</div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-num">E-AGPO-HT</div>
+            <div class="mm-label">Standards</div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-num">AAR</div>
+            <div class="mm-label">Report Output</div>
+          </div>
+        </div>
+        <a class="module-link" style="--mc:var(--charlie)">View Module Brief</a>
+      </div>
+
+      <!-- ORION -->
+      <div class="module-card" style="--mc:var(--orion)">
+        <div class="module-id">Module Beta</div>
+        <div class="module-name">Auracelle Orion</div>
+        <div class="module-version">v4 · Geneva Cyber Conference 2026</div>
+        <div class="module-rule"></div>
+        <p class="module-remit">
+          Cyber governance incident escalation and resilience stress-testing. Models cross-sector response, supply chain trust dependencies, and decision thresholds for emergency powers and disclosure obligations.
+        </p>
+        <div class="module-tags">
+          <span class="mtag">Cyber Escalation</span>
+          <span class="mtag">External Shock Injection</span>
+          <span class="mtag">Supply Chain Trust</span>
+          <span class="mtag">Cross-Sector Response</span>
+          <span class="mtag">Emergency Powers</span>
+        </div>
+        <div class="module-metrics">
+          <div class="mm-item">
+            <div class="mm-num">6</div>
+            <div class="mm-label">Scenarios</div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-num">1</div>
+            <div class="mm-label">Wargame Mechanic</div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-num">E-AGPO-HT</div>
+            <div class="mm-label">Standards</div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-num">AAR</div>
+            <div class="mm-label">Report Output</div>
+          </div>
+        </div>
+        <a class="module-link" style="--mc:var(--orion)">View Module Brief</a>
+      </div>
+
+      <!-- LYRA -->
+      <div class="module-card" style="--mc:var(--lyra)">
+        <div class="module-id">Module Gamma</div>
+        <div class="module-name">Auracelle Lyra</div>
+        <div class="module-version">v3 · Assurance Governance Platform</div>
+        <div class="module-rule"></div>
+        <p class="module-remit">
+          Assurance and standards resilience for high-risk domains — nuclear, biotech, space, and frontier AI. Evaluates verification regimes and confidence calibration under constrained information and institutional stress.
+        </p>
+        <div class="module-tags">
+          <span class="mtag">Nuclear / Biotech</span>
+          <span class="mtag">External Shock Injection</span>
+          <span class="mtag">Frontier AI</span>
+          <span class="mtag">Standards Resilience</span>
+          <span class="mtag">Verification Regimes</span>
+        </div>
+        <div class="module-metrics">
+          <div class="mm-item">
+            <div class="mm-num">4+</div>
+            <div class="mm-label">Scenarios</div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-num">1</div>
+            <div class="mm-label">Wargame Mechanic</div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-num">E-AGSO-HT</div>
+            <div class="mm-label">Standards</div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-num">AAR</div>
+            <div class="mm-label">Report Output</div>
+          </div>
+        </div>
+        <a class="module-link" style="--mc:var(--lyra)">View Module Brief</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DUAL-USE ARCHITECTURE -->
+<section id="architecture" class="dual-section">
+  <div class="wrap">
+    <div class="section-eyebrow">Dual-Use Design</div>
+    <h2 class="section-title">Public core. Private edge.<br>One methodology.</h2>
+    <p class="section-desc">A clean architectural separation that satisfies grant funders and consulting clients simultaneously — without compromising either relationship.</p>
+
+    <div class="dual-grid">
+      <div class="dual-panel public">
+        <div class="dual-header">
+          <div class="dual-icon">◈</div>
+          <div>
+            <div class="dual-label">Research Tier · Grant-Facing</div>
+            <div class="dual-title">Public Core</div>
+          </div>
+        </div>
+        <p class="dual-desc">Transparent, citable, academically rigorous — grounded in Auracelle AI Governance Labs research and UC Berkeley CLTC affiliation. This is the research instrument submitted to funding bodies.</p>
+        <ul class="dual-items">
+          <li>
+            <div class="di-marker">→</div>
+            Transparent methods documentation and evaluation metrics, fully auditable
+          </li>
+          <li>
+            <div class="di-marker">→</div>
+            Generic scenario templates and synthetic/demo datasets for reproducibility
+          </li>
+          <li>
+            <div class="di-marker">→</div>
+            Academic After Action Reports and publishable failure mode catalogs
+          </li>
+          <li>
+            <div class="di-marker">→</div>
+            Open-architecture framing for peer review and conference deployment
+          </li>
+          <li>
+            <div class="di-marker">→</div>
+            Design pattern libraries emerging from simulation outputs
+          </li>
+        </ul>
+      </div>
+
+      <div class="dual-panel private">
+        <div class="dual-header">
+          <div class="dual-icon">◆</div>
+          <div>
+            <div class="dual-label">Commercial Tier · Revenue-Facing</div>
+            <div class="dual-title">Private Edge</div>
+          </div>
+        </div>
+        <p class="dual-desc">Configured deployments of the same engine — tailored to client context under NDA. You are selling access and expertise, not the underlying IP.</p>
+        <ul class="dual-items">
+          <li>
+            <div class="di-marker">◆</div>
+            Client-specific scenario data, proprietary threat models, internal policy drafts
+          </li>
+          <li>
+            <div class="di-marker">◆</div>
+            Custom sector add-on modules: defense, financial regulation, critical infrastructure
+          </li>
+          <li>
+            <div class="di-marker">◆</div>
+            Facilitation services, structured wargaming sessions, training packages
+          </li>
+          <li>
+            <div class="di-marker">◆</div>
+            Hosted deployments with SLAs, integration support, and dedicated briefings
+          </li>
+          <li>
+            <div class="di-marker">◆</div>
+            Decision matrix customization and proprietary decision-support outputs
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="dual-positioning-line">
+      <p class="dpl-text">"We keep the <strong>methodology and measurement framework</strong> open and auditable, while tailoring scenarios, data, and decision matrices to client context under NDA."</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- E-AGPO FRAMEWORK -->
+<!-- PROPRIETARY FRAMEWORK -->
+<section id="framework" class="framework-section">
+  <div class="wrap">
+    <div class="section-eyebrow">Theoretical Foundation</div>
+    <h2 class="section-title">Proprietary governance<br>intelligence architecture.</h2>
+    <p class="section-desc">The E-AGPO-HT and E-AGSO-HT frameworks underpin all three Auracelle modules. Methodology documentation is available to verified institutional partners and research collaborators under NDA.</p>
+
+    <div class="strata-visual">
+      <div class="stratum">
+        <div class="stratum-id">
+          <div class="sid">FRAMEWORK</div>
+          <div class="snum" style="font-size:1.1rem;margin-top:4px;letter-spacing:.04em;">E-AGPO-HT</div>
+        </div>
+        <div class="stratum-content">
+          <div class="stratum-name">AI Governance Policy Optimization — Charlie &amp; Orion</div>
+          <p class="stratum-desc">A multi-stratum wargaming intelligence framework designed to quantify governance coordination failure under adversarial conditions, cross-stakeholder incentive misalignment, and cascading institutional dependencies. Developed and owned by Auracelle AI Governance Labs.</p>
+          <div class="stratum-items">
+            <span class="si">Multi-stratum Architecture</span>
+            <span class="si">Governance Coordination Scoring</span>
+            <span class="si">Threshold Breach Detection</span>
+            <span class="si">Proprietary IP · Auracelle AI Governance Labs</span>
+          </div>
+        </div>
+      </div>
+      <div class="stratum">
+        <div class="stratum-id">
+          <div class="sid">FRAMEWORK</div>
+          <div class="snum" style="font-size:1.1rem;margin-top:4px;letter-spacing:.04em;">E-AGSO-HT</div>
+        </div>
+        <div class="stratum-content">
+          <div class="stratum-name">AI Governance Standards Optimization — Lyra</div>
+          <p class="stratum-desc">A parallel multi-stratum framework adapted for assurance and standards verification in high-risk domains. Evaluates whether standards regimes maintain integrity under institutional stress, constrained information, and adversarial pressure in nuclear, biotech, space, and frontier AI contexts.</p>
+          <div class="stratum-items">
+            <span class="si">Standards Verification Architecture</span>
+            <span class="si">Confidence Calibration Under Constraints</span>
+            <span class="si">High-Risk Domain Adapted</span>
+            <span class="si">Proprietary IP · Auracelle AI Governance Labs</span>
+          </div>
+        </div>
+      </div>
+      <div class="stratum">
+        <div class="stratum-id">
+          <div class="sid">ACCESS</div>
+          <div class="snum" style="font-size:1.4rem;margin-top:4px;">NDA</div>
+        </div>
+        <div class="stratum-content">
+          <div class="stratum-name">Methodology Access — Institutional Partners &amp; Verified Researchers</div>
+          <p class="stratum-desc">Full framework documentation, scoring constructs, and simulation parameters are available exclusively to institutional partners, grant-funded research collaborators, and verified consulting clients under executed non-disclosure agreements. Contact Auracelle AI Governance Labs to initiate access.</p>
+          <div class="stratum-items">
+            <span class="si">Institutional Briefing Pack</span>
+            <span class="si">Research Collaboration Agreement</span>
+            <span class="si">Consulting Engagement NDA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- GRANT / CONSULTING OPPORTUNITIES -->
+<section id="engagement" class="grants-section">
+  <div class="wrap">
+    <div class="section-eyebrow">Engagement Model</div>
+    <h2 class="section-title">How Auracelle engages.</h2>
+    <p class="section-desc">The suite supports three engagement modes — each drawing on the same proprietary framework, deployed to fit the context.</p>
+
+    <table class="grant-table">
+      <thead>
+        <tr>
+          <th>Engagement Type</th>
+          <th>Module Alignment</th>
+          <th>Mode</th>
+          <th>What It Delivers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Policy Stress-Testing</td>
+          <td><span class="module-dot dot-ch"></span>Charlie &nbsp;<span class="module-dot dot-or"></span>Orion</td>
+          <td><span class="grant-badge gb-consulting">Consulting</span></td>
+          <td>Structured scenario runs that surface governance failure modes before policy implementation</td>
+        </tr>
+        <tr>
+          <td>Cyber Resilience Assessment</td>
+          <td><span class="module-dot dot-or"></span>Orion</td>
+          <td><span class="grant-badge gb-consulting">Consulting</span></td>
+          <td>Cross-sector incident escalation modeling; supply chain trust and emergency powers thresholds</td>
+        </tr>
+        <tr>
+          <td>Assurance &amp; Standards Verification</td>
+          <td><span class="module-dot dot-ly"></span>Lyra</td>
+          <td><span class="grant-badge gb-consulting">Consulting</span></td>
+          <td>Evaluation of whether verification regimes hold under institutional stress and constrained information</td>
+        </tr>
+        <tr>
+          <td>Academic Research Collaboration</td>
+          <td>Suite-wide</td>
+          <td><span class="grant-badge gb-research">Research</span></td>
+          <td>Joint scenario design, publishable failure mode catalogs, and AAR outputs under open methodology terms</td>
+        </tr>
+        <tr>
+          <td>Institutional Wargaming Facilitation</td>
+          <td><span class="module-dot dot-ch"></span>Charlie &nbsp;<span class="module-dot dot-or"></span>Orion</td>
+          <td><span class="grant-badge gb-both">Research + Consulting</span></td>
+          <td>Facilitated multi-stakeholder wargaming sessions for defense, intelligence, and international organizations</td>
+        </tr>
+        <tr>
+          <td>Frontier AI Safety Research</td>
+          <td><span class="module-dot dot-ch"></span>Charlie &nbsp;<span class="module-dot dot-ly"></span>Lyra</td>
+          <td><span class="grant-badge gb-research">Research</span></td>
+          <td>Empirical governance stress-testing for AI safety assurance frameworks and high-risk domain standards</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- INSTITUTIONS -->
+<section class="institutions-section">
+  <div class="wrap">
+    <div class="inst-label">Built for audiences including</div>
+    <div class="inst-row">
+      <div class="inst-item">Defense Ministries</div>
+      <div class="inst-item">Intelligence Agencies</div>
+      <div class="inst-item">International Organizations</div>
+      <div class="inst-item">NATO Commands</div>
+      <div class="inst-item">Standards Bodies</div>
+      <div class="inst-item">Critical Infrastructure Operators</div>
+      <div class="inst-item">Policy Research Institutes</div>
+      <div class="inst-item">Frontier AI Developers</div>
+      <div class="inst-item">Government Regulators</div>
+      <div class="inst-item">Academic Research Centers</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact" class="cta-section">
+  <div class="wrap">
+    <h2 class="cta-title">Ready to stress-test<br>your governance controls?</h2>
+    <p class="cta-sub">Whether you're a research funder, institutional partner, or an organization navigating high-stakes policy decisions — Auracelle has a deployment mode for you.</p>
+    <div class="cta-actions">
+      <a href="/cdn-cgi/l/email-protection#9dfce8effcfef8f1f1f8ddf8e5fcf0edf1f8b3fef2f0" class="btn-primary">Request an Institutional Briefing</a>
+      <button class="btn-secondary">Download Research Brief</button>
+    </div>
+    <div class="contact-channels">
+      <div class="contact-ch">
+        <span class="cc-label">Research</span>
+        <span>Auracelle AI Governance Labs</span>
+      </div>
+      <div class="contact-ch">
+        <span class="cc-label">Affiliation</span>
+        <span>UC Berkeley CLTC</span>
+      </div>
+      <div class="contact-ch">
+        <span class="cc-label">IP</span>
+        <span>E-AGPO-HT · E-AGSO-HT · Proprietary</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Aura<span>celle</span></div>
+      <div class="footer-ip">E-AGPO-HT · Proprietary IP · Auracelle AI Governance Labs</div>
+    </div>
+    <div class="footer-meta">
+      Strategic Cognition &amp; Governance Stress-Testing Suite<br>
+      Charlie · Orion · Lyra &nbsp;·&nbsp; 2026
+   
